@@ -10,13 +10,16 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
+import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val timestamp = LocalDate.now()
+
         setContent {
             DayLeaf3Theme {
                 Surface(color = MaterialTheme.colorScheme.background) {
@@ -24,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.safeDrawingPadding().fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                   ) {
-                    DayLeaf3Screen()
+                    DayLeaf3Screen(timestamp)
                   }
                 }
             }
