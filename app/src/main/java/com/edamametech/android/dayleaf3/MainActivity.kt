@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val timestamp = LocalDate.now()
+        val noteDate = LocalDate.now()
 
         setContent {
             DayLeaf3Theme {
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.safeDrawingPadding().fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                   ) {
-                    DayLeaf3Screen(timestamp)
+                    DayLeaf3Screen(noteDate)
                   }
                 }
             }
