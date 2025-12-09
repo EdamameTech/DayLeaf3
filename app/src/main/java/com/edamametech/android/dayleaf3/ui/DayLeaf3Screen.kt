@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -27,6 +30,11 @@ fun noteDateString(noteDate: LocalDate) : String {
 
 @Composable
 fun DayLeaf3Screen(noteDate: LocalDate) {
+    var noteText by rememberSaveable { mutableStateOf("") }
+    fun updateNote(text: String) {
+        noteText = text
+    }
+
     Column{
         Row(
             verticalAlignment = Alignment.Top,
@@ -44,8 +52,8 @@ fun DayLeaf3Screen(noteDate: LocalDate) {
             )
         }
         BasicTextField(
-            value = "Hello,\nWorld!",
-            onValueChange = {},
+            value = noteText,
+            onValueChange = { updateNote(it ) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             modifier = Modifier
                 .fillMaxWidth()
