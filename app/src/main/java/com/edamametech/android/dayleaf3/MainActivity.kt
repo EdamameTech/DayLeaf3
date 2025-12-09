@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.safeDrawingPadding().fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                   ) {
-                    DayLeaf3Screen(noteDate)
+                    DayLeaf3Screen(noteDate, "")
                   }
                 }
             }

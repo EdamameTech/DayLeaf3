@@ -29,8 +29,8 @@ fun noteDateString(noteDate: LocalDate) : String {
 }
 
 @Composable
-fun DayLeaf3Screen(noteDate: LocalDate) {
-    var noteText by rememberSaveable { mutableStateOf("") }
+fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
+    var noteText by rememberSaveable { mutableStateOf(text) }
     fun updateNote(text: String) {
         noteText = text
     }
@@ -68,8 +68,9 @@ fun DayLeaf3Screen(noteDate: LocalDate) {
 @Composable
 fun DayLeaf3ScreenPreview() {
     var timestamp = LocalDate.of(2025,12,6)
+    var text = "Hello,\nWorld!"
     // when this line of code is written
     DayLeaf3Theme {
-        DayLeaf3Screen(timestamp)
+        DayLeaf3Screen(timestamp, text)
     }
 }
