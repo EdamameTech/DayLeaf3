@@ -22,13 +22,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DayLeaf3Theme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                  Surface(
+                Surface(
                     modifier = Modifier.safeDrawingPadding().fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                  ) {
+                ) {
                     DayLeaf3Screen(noteDate, "")
-                  }
                 }
             }
         }
