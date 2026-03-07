@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,8 +32,10 @@ fun noteDateString(noteDate: LocalDate) : String {
 @Composable
 fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
     var noteText by rememberSaveable { mutableStateOf(text) }
+    var edited by rememberSaveable { mutableStateOf(false) }
     fun updateNote(text: String) {
         noteText = text
+        edited = true
     }
 
     Column{
@@ -43,7 +46,7 @@ fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
                 .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
             Text(
-                noteDateString(noteDate),
+                noteDateString(noteDate) + if (edited) {"*"} else {""},
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
                 overflow = TextOverflow.StartEllipsis,

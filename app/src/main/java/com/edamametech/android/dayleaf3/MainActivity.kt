@@ -17,6 +17,9 @@ import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
+    override fun onPause() {
+        super.onPause()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
