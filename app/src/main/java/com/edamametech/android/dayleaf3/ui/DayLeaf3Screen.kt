@@ -32,10 +32,8 @@ fun noteDateString(noteDate: LocalDate) : String {
 @Composable
 fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
     var noteText by rememberSaveable { mutableStateOf(text) }
-    var edited by rememberSaveable { mutableStateOf(false) }
     fun updateNote(text: String) {
         noteText = text
-        edited = true
     }
 
     Column{
@@ -46,7 +44,7 @@ fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
                 .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
             Text(
-                noteDateString(noteDate) + if (edited) {"*"} else {""},
+                noteDateString(noteDate),
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
                 overflow = TextOverflow.StartEllipsis,
