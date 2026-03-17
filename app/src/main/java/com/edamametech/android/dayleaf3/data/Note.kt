@@ -20,9 +20,7 @@ data class Note(
     @PrimaryKey
     val date: LocalDate,
 
-    @ColumnInfo(defaultValue = "")
     val note: String,
 
-    @ColumnInfo(defaultValue = "false")
     val isExported: Boolean
 )

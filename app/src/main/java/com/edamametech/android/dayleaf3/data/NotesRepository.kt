@@ -3,8 +3,10 @@ package com.edamametech.android.dayleaf3.data
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
-interface NotesRepository {
-    fun getAllDatesStream(): Flow<List<LocalDate>>
+class NotesRepository(private val noteDao: NoteDao) {
+    fun upsertNote(note: Note) = noteDao.upsertNote(note)
 
-    suspend fun upsertNote(note: Note)
+    fun getAllDates(): List<LocalDate> = noteDao.getAllDates()
+
+    fun getNote(date: LocalDate): Note? = noteDao.getNote(date)
 }
