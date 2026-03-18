@@ -1,6 +1,8 @@
 package com.edamametech.android.dayleaf3.ui
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.edamametech.android.dayleaf3.data.NotesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +14,10 @@ data class NoteUiState(
     val note: String = "",
 )
 
-class NoteViewModel : ViewModel() {
+class NoteViewModel(
+    savesStateHandle: SavedStateHandle,
+    private val notesRepository: NotesRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(NoteUiState())
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
