@@ -27,33 +27,28 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val noteDate = LocalDate.now()
+        val noteText = "Hello, World! from main activity."
 
-        val viewModel: NoteViewModel by viewModels()
-        viewModel.setDate(noteDate)
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    setContent {
-                        DayLeaf3Theme {
-                            enableEdgeToEdge(
-                                statusBarStyle = if (!isSystemInDarkTheme()) {
-                                    SystemBarStyle.light(
-                                        MaterialTheme.colorScheme.primaryContainer.toArgb(),
-                                        MaterialTheme.colorScheme.primaryContainer.toArgb()
-                                    )
-                                } else {
-                                    SystemBarStyle.dark(
-                                        MaterialTheme.colorScheme.primaryContainer.toArgb()
-                                    )
-                                }
-                            )
-                            Surface(
-                                modifier = Modifier.safeDrawingPadding().fillMaxSize(),
-                            ) {
-                                DayLeaf3Screen(it.date, it.note)
-                            }
-                        }
+        setContent {
+            DayLeaf3Theme {
+                enableEdgeToEdge(
+                    statusBarStyle = if (!isSystemInDarkTheme()) {
+                        SystemBarStyle.light(
+                            MaterialTheme.colorScheme.primaryContainer.toArgb(),
+                            MaterialTheme.colorScheme.primaryContainer.toArgb()
+                        )
+                    } else {
+                        SystemBarStyle.dark(
+                            MaterialTheme.colorScheme.primaryContainer.toArgb()
+                        )
                     }
+                )
+                Surface(
+                    modifier = Modifier
+                        .safeDrawingPadding()
+                        .fillMaxSize(),
+                ) {
+                    DayLeaf3Screen(noteDate, noteText)
                 }
             }
         }
