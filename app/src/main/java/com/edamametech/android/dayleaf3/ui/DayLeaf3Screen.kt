@@ -24,19 +24,20 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-fun noteDateString(noteDate: LocalDate) : String {
+fun noteDateString(noteDate: LocalDate): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd E", Locale.US)
     return noteDate.format(formatter)
 }
 
 @Composable
-fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
-    var noteText by rememberSaveable { mutableStateOf(text) }
+fun DayLeaf3Screen() {
+    var noteDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
+    var noteText by rememberSaveable { mutableStateOf("Hello, World! from Screen.") }
     fun updateNote(text: String) {
         noteText = text
     }
 
-    Column{
+    Column {
         Row(
             verticalAlignment = Alignment.Top,
             modifier = Modifier
@@ -54,7 +55,7 @@ fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
         }
         BasicTextField(
             value = noteText,
-            onValueChange = { updateNote(it ) },
+            onValueChange = { updateNote(it) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,10 +69,7 @@ fun DayLeaf3Screen(noteDate: LocalDate, text: String) {
 @Preview(showBackground = true)
 @Composable
 fun DayLeaf3ScreenPreview() {
-    var timestamp = LocalDate.of(2025,12,6)
-    var text = "Hello,\nWorld!"
-    // when this line of code is written
     DayLeaf3Theme {
-        DayLeaf3Screen(timestamp, text)
+        DayLeaf3Screen()
     }
 }

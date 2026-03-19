@@ -26,9 +26,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val noteDate = LocalDate.now()
-        val noteText = "Hello, World! from main activity."
-
         setContent {
             DayLeaf3Theme {
                 enableEdgeToEdge(
@@ -48,7 +45,7 @@ class MainActivity : ComponentActivity() {
                         .safeDrawingPadding()
                         .fillMaxSize(),
                 ) {
-                    DayLeaf3Screen(noteDate, noteText)
+                    DayLeaf3Screen()
                 }
             }
         }
