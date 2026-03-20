@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
@@ -13,16 +12,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.edamametech.android.dayleaf3.ui.AppViewModelProvider
+import com.edamametech.android.dayleaf3.ui.NoteViewModel
 import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -34,7 +34,9 @@ fun noteDateString(noteDate: LocalDate): String {
 }
 
 @Composable
-fun DayLeaf3Screen() {
+fun DayLeaf3Screen(
+    viewModel: NoteViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
     /* Mock notes to be replaced by database */
     var allNotes = hashMapOf<LocalDate, String>(
         LocalDate.of(2026, 3, 14) to "It is pie day!",

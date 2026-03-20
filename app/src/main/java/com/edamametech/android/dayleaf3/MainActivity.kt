@@ -15,8 +15,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.edamametech.android.dayleaf3.ui.AppViewModelProvider
 import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
 import com.edamametech.android.dayleaf3.ui.NoteViewModel
 import kotlinx.coroutines.launch
