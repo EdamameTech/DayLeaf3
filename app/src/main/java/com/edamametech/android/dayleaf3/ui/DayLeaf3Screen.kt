@@ -92,7 +92,7 @@ fun DayLeaf3Screen(
                 enabled = false,
                 onClick = { /* TODO */ },
                 content = {
-                    Text("^")
+                    Text("↓")
                 },
                 shape = RoundedCornerShape(4.dp)
             )
