@@ -11,7 +11,7 @@ interface NoteDao {
     fun upsertNote(note: Note)
 
     @Query("SELECT * FROM notes WHERE date = :date")
-    fun getNote(date: LocalDate): Note
+    fun getNote(date: LocalDate): Note?
 
     @Query("SELECT date FROM notes ORDER BY date ASC")
     fun getAllDates(): List<LocalDate>

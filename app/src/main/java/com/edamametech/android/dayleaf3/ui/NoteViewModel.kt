@@ -40,7 +40,11 @@ class NoteViewModel(
     suspend fun loadNote(date: LocalDate) {
         val allDates = notesRepository.getAllDates()
         val isToday = date.isEqual(LocalDate.now())
-        val isFirstDate = date.isEqual(allDates[0])
+        val isFirstDate = if (allDates.size > 0) {
+            date.isEqual(allDates[0])
+        } else {
+            true
+        }
 
         val note = notesRepository.getNote(date)
         _uiState.update { currentState ->

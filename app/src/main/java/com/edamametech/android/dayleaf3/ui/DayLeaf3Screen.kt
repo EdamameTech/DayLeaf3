@@ -110,6 +110,18 @@ fun DayLeaf3Screen(
                 },
                 shape = RoundedCornerShape(4.dp)
             )
+            // Save
+            OutlinedButton(
+                enabled = uiState.value.isEdited,
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.saveNote()
+                    }
+                },
+                content = {
+                    Text("S")
+                }
+            )
         }
         BasicTextField(
             enabled = uiState.value.date != null,
