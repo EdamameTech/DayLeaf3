@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -21,6 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.edamametech.android.dayleaf3.ui.AppViewModelProvider
 import com.edamametech.android.dayleaf3.ui.NoteViewModel
 import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -35,7 +38,7 @@ fun DayLeaf3Screen(
     viewModel: NoteViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.uiState.collectAsState()
-    // val coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     val dateString = if (uiState.value.date == null) {
         "↻"
@@ -71,7 +74,11 @@ fun DayLeaf3Screen(
             /* Previous day */
             OutlinedButton(
                 enabled = !uiState.value.isFirstDate,
-                onClick = { viewModel.offsetDate(-1) },
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.offsetDate(-1)
+                    }
+                },
                 content = {
                     Text("<")
                 },
@@ -80,7 +87,11 @@ fun DayLeaf3Screen(
             /* Next day */
             OutlinedButton(
                 enabled = !uiState.value.isToday,
-                onClick = { viewModel.offsetDate(1) },
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.offsetDate(1)
+                    }
+                },
                 content = {
                     Text(">")
                 },
@@ -89,7 +100,11 @@ fun DayLeaf3Screen(
             // Today
             OutlinedButton(
                 enabled = !uiState.value.isToday,
-                onClick = { viewModel.setDate(LocalDate.now()) },
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.saveAndSetDate(LocalDate.now())
+                    }
+                },
                 content = {
                     Text(">>")
                 },

@@ -3,6 +3,8 @@ package com.edamametech.android.dayleaf3.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.edamametech.android.dayleaf3.data.NotesRepository
+import com.edamametech.android.dayleaf3.data.Note
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,7 +58,12 @@ class NoteViewModel(
         }
     }
 
-    fun offsetDate(offset: Int) {
+    suspend fun saveAndSetDate(date: LocalDate) {
+        saveNote()
+        setDate(date)
+    }
+
+    suspend fun offsetDate(offset: Int) {
         var t = uiState.value.allDates.binarySearch(uiState.value.date) + offset
         if (t < 0) {
             t = 0
@@ -64,13 +71,25 @@ class NoteViewModel(
         if (t >= uiState.value.allDates.size) {
             t = uiState.value.allDates.size - 1
         }
-        setDate(uiState.value.allDates[t])
+        saveAndSetDate(uiState.value.allDates[t])
     }
 
     fun updateNote(text: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 note = text
+            )
+        }
+    }
+
+    suspend fun saveNote() {
+        if (uiState.value.date != null) {
+            notesRepository.upsertNote(
+                Note(
+                    uiState.value.date!!,
+                    uiState.value.note,
+                    isExported = false
+                )
             )
         }
     }
