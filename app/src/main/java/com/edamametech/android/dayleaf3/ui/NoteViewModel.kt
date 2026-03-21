@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.edamametech.android.dayleaf3.data.NotesRepository
 import com.edamametech.android.dayleaf3.data.Note
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +19,7 @@ val allNotes = hashMapOf<LocalDate, String>(
 
 data class NoteUiState(
     val date: LocalDate? = null,
-    val note: String = "",
+    val text: String = "",
 
     val allDates: List<LocalDate> = allNotes.keys.sorted(),
     val anyExportable: Boolean = false,
@@ -40,9 +39,9 @@ class NoteViewModel(
     }
 
     fun setDate(date: LocalDate) {
-        var note = allNotes[date]
-        if (note == null) {
-            note = ""
+        var text = allNotes[date]
+        if (text == null) {
+            text = ""
         }
 
         var isToday = date.isEqual(LocalDate.now())
@@ -51,7 +50,7 @@ class NoteViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 date = date,
-                note = note,
+                text = text,
                 isFirstDate = isFirstDate,
                 isToday = isToday,
             )
@@ -77,7 +76,7 @@ class NoteViewModel(
     fun updateNote(text: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                note = text
+                text = text
             )
         }
     }
@@ -87,7 +86,7 @@ class NoteViewModel(
             notesRepository.upsertNote(
                 Note(
                     uiState.value.date!!,
-                    uiState.value.note,
+                    uiState.value.text,
                     isExported = false
                 )
             )

@@ -113,7 +113,7 @@ fun DayLeaf3Screen(
         }
         BasicTextField(
             enabled = uiState.value.date != null,
-            value = uiState.value.note,
+            value = uiState.value.text,
             onValueChange = { viewModel.updateNote(it) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             modifier = Modifier
