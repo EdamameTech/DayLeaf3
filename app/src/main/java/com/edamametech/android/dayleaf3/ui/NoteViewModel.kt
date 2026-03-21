@@ -1,30 +1,28 @@
 package com.edamametech.android.dayleaf3.ui
 
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.edamametech.android.dayleaf3.data.NotesRepository
 import com.edamametech.android.dayleaf3.data.Note
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
-
-/* Mock notes to be replaced by database */
-val allNotes = hashMapOf<LocalDate, String>(
-    LocalDate.of(2026, 3, 14) to "It is pie day!",
-    LocalDate.of(2026, 3, 17) to "It is Saint Pattick's Day!",
-    LocalDate.now() to "Hello, World! It is today!"
-)
 
 data class NoteUiState(
     val date: LocalDate? = null,
     val text: String = "",
 
-    val allDates: List<LocalDate> = allNotes.keys.sorted(),
+    val allDates: List<LocalDate> = emptyList<LocalDate>(),
     val anyExportable: Boolean = false,
     val isFirstDate: Boolean = true,
-    val isToday: Boolean = true
+    val isToday: Boolean = true,
+    val isEdited: Boolean = false
 )
 
 class NoteViewModel(
@@ -35,22 +33,26 @@ class NoteViewModel(
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
     init {
-        setDate(LocalDate.now())
+        viewModelScope.launch(Dispatchers.IO) {
+            loadNote(LocalDate.now())
+        }
     }
 
-    fun setDate(date: LocalDate) {
-        var text = allNotes[date]
-        if (text == null) {
-            text = ""
-        }
+    suspend fun loadNote(date: LocalDate) {
+        val allDates = notesRepository.getAllDates()
+        val isToday = date.isEqual(LocalDate.now())
+        val isFirstDate = date.isEqual(allDates[0])
 
-        var isToday = date.isEqual(LocalDate.now())
-        var isFirstDate = date.isEqual(uiState.value.allDates[0])
-
+        val note = notesRepository.getNote(date)
         _uiState.update { currentState ->
             currentState.copy(
                 date = date,
-                text = text,
+                text = if (note != null) {
+                    note.text
+                } else {
+                    ""
+                },
+                allDates = allDates,
                 isFirstDate = isFirstDate,
                 isToday = isToday,
             )
@@ -59,7 +61,7 @@ class NoteViewModel(
 
     suspend fun saveAndSetDate(date: LocalDate) {
         saveNote()
-        setDate(date)
+        loadNote(date)
     }
 
     suspend fun offsetDate(offset: Int) {
@@ -76,13 +78,14 @@ class NoteViewModel(
     fun updateNote(text: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                text = text
+                text = text,
+                isEdited = true
             )
         }
     }
 
     suspend fun saveNote() {
-        if (uiState.value.date != null) {
+        if (uiState.value.date != null && uiState.value.isEdited) {
             notesRepository.upsertNote(
                 Note(
                     uiState.value.date!!,
