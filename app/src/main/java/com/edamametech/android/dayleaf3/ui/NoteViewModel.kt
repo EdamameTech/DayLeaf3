@@ -1,6 +1,5 @@
 package com.edamametech.android.dayleaf3.ui
 
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

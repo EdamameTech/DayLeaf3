@@ -1,6 +1,5 @@
 package com.edamametech.android.dayleaf3.data
 
-import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 class NotesRepository(private val noteDao: NoteDao) {

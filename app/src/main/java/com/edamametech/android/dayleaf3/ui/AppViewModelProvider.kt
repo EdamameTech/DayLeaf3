@@ -1,6 +1,5 @@
 package com.edamametech.android.dayleaf3.ui
 
-import android.os.Parcelable
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras

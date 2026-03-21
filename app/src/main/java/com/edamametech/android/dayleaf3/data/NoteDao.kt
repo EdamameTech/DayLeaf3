@@ -3,9 +3,7 @@ package com.edamametech.android.dayleaf3.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
-import com.edamametech.android.dayleaf3.data.Note
 
 @Dao
 interface NoteDao {
