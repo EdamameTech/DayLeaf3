@@ -14,8 +14,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.lifecycleScope
 import com.edamametech.android.dayleaf3.ui.NoteViewModel
 import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val viewModel: NoteViewModel by viewModels { NoteViewModel.Factory }
@@ -45,6 +48,14 @@ class MainActivity : ComponentActivity() {
                     DayLeaf3Screen(viewModel)
                 }
             }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.saveNote()
         }
     }
 }
