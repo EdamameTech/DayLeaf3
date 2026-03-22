@@ -15,4 +15,7 @@ interface NoteDao {
 
     @Query("SELECT date FROM notes ORDER BY date ASC")
     fun getAllDates(): List<LocalDate>
+
+    @Query("SELECT date FROM notes WHERE isExported = 0 ORDER BY date ASC")
+    fun getUnexportedDates(): List<LocalDate>
 }

@@ -1,5 +1,6 @@
 package com.edamametech.android.dayleaf3.ui
 
+import androidx.compose.ui.platform.LocalAutofill
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -22,10 +23,9 @@ data class NoteUiState(
     val date: LocalDate? = null,
     val text: String = "",
 
-    val allDates: List<LocalDate> = emptyList<LocalDate>(),
+    val previousDate: LocalDate? = null,
+    val nextDate: LocalDate? = null,
     val anyExportable: Boolean = false,
-    val isFirstDate: Boolean = true,
-    val isToday: Boolean = true,
     val isEdited: Boolean = false
 )
 
@@ -43,15 +43,26 @@ class NoteViewModel(
     }
 
     suspend fun loadNote(date: LocalDate) {
+        val today = LocalDate.now()
         val allDates = notesRepository.getAllDates()
-        val isToday = date.isEqual(LocalDate.now())
-        val isFirstDate = if (allDates.size > 0) {
-            date.isEqual(allDates[0])
+        val dateIndex = allDates.binarySearch(date)
+        val previousDate = if (dateIndex > 0) {
+            allDates[dateIndex - 1]
         } else {
-            true
+            null
         }
-
+        val nextDate = if (dateIndex < allDates.size - 1) {
+            allDates[dateIndex + 1]
+        } else {
+            if (!date.isEqual(today)) {
+                today
+            } else {
+                null
+            }
+        }
+        val anyExportable = !notesRepository.getUnexportedDates().isEmpty()
         val note = notesRepository.getNote(date)
+
         _uiState.update { currentState ->
             currentState.copy(
                 date = date,
@@ -60,9 +71,10 @@ class NoteViewModel(
                 } else {
                     ""
                 },
-                allDates = allDates,
-                isFirstDate = isFirstDate,
-                isToday = isToday,
+                previousDate = previousDate,
+                nextDate = nextDate,
+                anyExportable = anyExportable,
+                isEdited = false
             )
         }
     }
@@ -70,17 +82,6 @@ class NoteViewModel(
     suspend fun saveAndSetDate(date: LocalDate) {
         saveNote()
         loadNote(date)
-    }
-
-    suspend fun offsetDate(offset: Int) {
-        var t = uiState.value.allDates.binarySearch(uiState.value.date) + offset
-        if (t < 0) {
-            t = 0
-        }
-        if (t >= uiState.value.allDates.size) {
-            t = uiState.value.allDates.size - 1
-        }
-        saveAndSetDate(uiState.value.allDates[t])
     }
 
     fun updateNote(text: String) {
@@ -100,6 +101,12 @@ class NoteViewModel(
                     uiState.value.text,
                     isExported = false
                 )
+            )
+        }
+        _uiState.update { currentState ->
+            currentState.copy(
+                isEdited = false,
+                anyExportable = true
             )
         }
     }

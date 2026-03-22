@@ -60,7 +60,7 @@ fun DayLeaf3Screen(
             )
             /* Export */
             OutlinedButton(
-                enabled = uiState.value.anyExportable,
+                enabled = uiState.value.anyExportable || uiState.value.isEdited,
                 onClick = { /* TODO */ },
                 content = {
                     Text("↓")
@@ -69,10 +69,12 @@ fun DayLeaf3Screen(
             )
             /* Previous day */
             OutlinedButton(
-                enabled = !uiState.value.isFirstDate,
+                enabled = uiState.value.previousDate != null,
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.offsetDate(-1)
+                    if (uiState.value.previousDate != null) {
+                        coroutineScope.launch(Dispatchers.IO) {
+                            viewModel.saveAndSetDate(uiState.value.previousDate!!)
+                        }
                     }
                 },
                 content = {
@@ -82,10 +84,12 @@ fun DayLeaf3Screen(
             )
             /* Next day */
             OutlinedButton(
-                enabled = !uiState.value.isToday,
+                enabled = uiState.value.nextDate != null,
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.offsetDate(1)
+                    if (uiState.value.nextDate != null) {
+                        coroutineScope.launch(Dispatchers.IO) {
+                            viewModel.saveAndSetDate(uiState.value.nextDate!!)
+                        }
                     }
                 },
                 content = {
@@ -95,7 +99,6 @@ fun DayLeaf3Screen(
             )
             // Today
             OutlinedButton(
-                enabled = !uiState.value.isToday,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
                         viewModel.saveAndSetDate(LocalDate.now())

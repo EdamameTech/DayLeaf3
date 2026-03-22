@@ -8,4 +8,6 @@ class NotesRepository(private val noteDao: NoteDao) {
     fun getAllDates(): List<LocalDate> = noteDao.getAllDates()
 
     fun getNote(date: LocalDate): Note? = noteDao.getNote(date)
+
+    fun getUnexportedDates(): List<LocalDate> = noteDao.getUnexportedDates()
 }
