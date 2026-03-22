@@ -60,7 +60,7 @@ fun DayLeaf3Screen(
                     .padding(8.dp)
             )/* Export */
             OutlinedButton(
-                enabled = uiState.value.unexported > 0 || uiState.value.isEdited,
+                enabled = (uiState.value.unexported > 0 || uiState.value.isEdited) && uiState.value.exporting == 0,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
                         viewModel.exportNotes()
@@ -72,36 +72,39 @@ fun DayLeaf3Screen(
                 shape = RoundedCornerShape(4.dp)
             )/* Previous day */
             OutlinedButton(
-                enabled = uiState.value.previousDate != null, onClick = {
-                if (uiState.value.previousDate != null) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.saveAndSetDate(uiState.value.previousDate!!)
+                enabled = uiState.value.previousDate != null && uiState.value.exporting == 0,
+                onClick = {
+                    if (uiState.value.previousDate != null) {
+                        coroutineScope.launch(Dispatchers.IO) {
+                            viewModel.saveAndSetDate(uiState.value.previousDate!!)
+                        }
                     }
-                }
-            }, content = {
-                Text("<")
-            }, shape = RoundedCornerShape(4.dp)
+                }, content = {
+                    Text("<")
+                }, shape = RoundedCornerShape(4.dp)
             )/* Next day */
             OutlinedButton(
-                enabled = uiState.value.nextDate != null, onClick = {
-                if (uiState.value.nextDate != null) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.saveAndSetDate(uiState.value.nextDate!!)
+                enabled = uiState.value.nextDate != null && uiState.value.exporting == 0,
+                onClick = {
+                    if (uiState.value.nextDate != null) {
+                        coroutineScope.launch(Dispatchers.IO) {
+                            viewModel.saveAndSetDate(uiState.value.nextDate!!)
+                        }
                     }
-                }
-            }, content = {
-                Text(">")
-            }, shape = RoundedCornerShape(4.dp)
+                }, content = {
+                    Text(">")
+                }, shape = RoundedCornerShape(4.dp)
             )
             // Today
             OutlinedButton(
+                enabled = uiState.value.exporting == 0,
                 onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    viewModel.saveAndSetDate(LocalDate.now())
-                }
-            }, content = {
-                Text(">>")
-            }, shape = RoundedCornerShape(4.dp)
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.saveAndSetDate(LocalDate.now())
+                    }
+                }, content = {
+                    Text(">>")
+                }, shape = RoundedCornerShape(4.dp)
             )
         }
         if (uiState.value.exporting > 0) {
