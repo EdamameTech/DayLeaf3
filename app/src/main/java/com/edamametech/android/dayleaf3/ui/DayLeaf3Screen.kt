@@ -16,12 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.edamametech.android.dayleaf3.ui.AppViewModelProvider
 import com.edamametech.android.dayleaf3.ui.NoteViewModel
-import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -35,7 +31,7 @@ fun noteDateString(noteDate: LocalDate): String {
 
 @Composable
 fun DayLeaf3Screen(
-    viewModel: NoteViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: NoteViewModel
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -134,13 +130,5 @@ fun DayLeaf3Screen(
                 .padding(8.dp)
                 .background(color = MaterialTheme.colorScheme.surface)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DayLeaf3ScreenPreview() {
-    DayLeaf3Theme {
-        DayLeaf3Screen()
     }
 }

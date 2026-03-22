@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -13,9 +14,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import com.edamametech.android.dayleaf3.ui.NoteViewModel
 import com.edamametech.android.dayleaf3.ui.theme.DayLeaf3Theme
 
 class MainActivity : ComponentActivity() {
+    private val viewModel: NoteViewModel by viewModels { NoteViewModel.Factory }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,7 +42,7 @@ class MainActivity : ComponentActivity() {
                         .safeDrawingPadding()
                         .fillMaxSize(),
                 ) {
-                    DayLeaf3Screen()
+                    DayLeaf3Screen(viewModel)
                 }
             }
         }
