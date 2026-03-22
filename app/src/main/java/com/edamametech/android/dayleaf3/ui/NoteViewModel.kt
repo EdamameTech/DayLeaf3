@@ -19,6 +19,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+val mockNotes = listOf<Note>(
+    Note(
+        LocalDate.of(2026, 3, 14), "It is pie day!", false
+    ),
+    Note(
+        LocalDate.of(2026, 3, 17), "It is Saint Patrick's Day!", false
+    )
+)
+
 data class NoteUiState(
     val date: LocalDate? = null,
     val text: String = "",
@@ -38,7 +47,14 @@ class NoteViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            seedDatabase(mockNotes)
             loadNote(LocalDate.now())
+        }
+    }
+
+    suspend fun seedDatabase(notes: List<Note>) {
+        for (note in notes) {
+            notesRepository.upsertNote(note)
         }
     }
 
