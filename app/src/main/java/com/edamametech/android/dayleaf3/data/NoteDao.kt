@@ -18,4 +18,7 @@ interface NoteDao {
 
     @Query("SELECT date FROM notes WHERE isExported = 0 ORDER BY date ASC")
     fun getUnexportedDates(): List<LocalDate>
+
+    @Query("SELECT COUNT(1) FROM notes WHERE isExported = 0")
+    fun getUnexportedDatesCount(): Int
 }

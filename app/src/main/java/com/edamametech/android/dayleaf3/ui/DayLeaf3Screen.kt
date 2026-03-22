@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.edamametech.android.dayleaf3.ui.NoteViewModel
@@ -57,61 +58,70 @@ fun DayLeaf3Screen(
                 modifier = Modifier
                     .weight(1F)
                     .padding(8.dp)
-            )
-            /* Export */
+            )/* Export */
             OutlinedButton(
-                enabled = uiState.value.anyExportable || uiState.value.isEdited,
-                onClick = { /* TODO */ },
+                enabled = uiState.value.unexported > 0 || uiState.value.isEdited,
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.exportNotes()
+                    }
+                },
                 content = {
                     Text("↓")
                 },
                 shape = RoundedCornerShape(4.dp)
-            )
-            /* Previous day */
+            )/* Previous day */
             OutlinedButton(
-                enabled = uiState.value.previousDate != null,
-                onClick = {
-                    if (uiState.value.previousDate != null) {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            viewModel.saveAndSetDate(uiState.value.previousDate!!)
-                        }
+                enabled = uiState.value.previousDate != null, onClick = {
+                if (uiState.value.previousDate != null) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.saveAndSetDate(uiState.value.previousDate!!)
                     }
-                },
-                content = {
-                    Text("<")
-                },
-                shape = RoundedCornerShape(4.dp)
-            )
-            /* Next day */
+                }
+            }, content = {
+                Text("<")
+            }, shape = RoundedCornerShape(4.dp)
+            )/* Next day */
             OutlinedButton(
-                enabled = uiState.value.nextDate != null,
-                onClick = {
-                    if (uiState.value.nextDate != null) {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            viewModel.saveAndSetDate(uiState.value.nextDate!!)
-                        }
+                enabled = uiState.value.nextDate != null, onClick = {
+                if (uiState.value.nextDate != null) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.saveAndSetDate(uiState.value.nextDate!!)
                     }
-                },
-                content = {
-                    Text(">")
-                },
-                shape = RoundedCornerShape(4.dp)
+                }
+            }, content = {
+                Text(">")
+            }, shape = RoundedCornerShape(4.dp)
             )
             // Today
             OutlinedButton(
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.saveAndSetDate(LocalDate.now())
-                    }
-                },
-                content = {
-                    Text(">>")
-                },
-                shape = RoundedCornerShape(4.dp)
+                coroutineScope.launch(Dispatchers.IO) {
+                    viewModel.saveAndSetDate(LocalDate.now())
+                }
+            }, content = {
+                Text(">>")
+            }, shape = RoundedCornerShape(4.dp)
             )
         }
+        if (uiState.value.exporting > 0) {
+            Row {
+                Text(
+                    String.format(
+                        "↻ %d/%d", uiState.value.exporting, uiState.value.unexported
+                    ),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+
+                )
+            }
+        }
         BasicTextField(
-            enabled = uiState.value.date != null,
+            enabled = uiState.value.date != null && uiState.value.exporting == 0,
             value = uiState.value.text,
             onValueChange = { viewModel.updateNote(it) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),

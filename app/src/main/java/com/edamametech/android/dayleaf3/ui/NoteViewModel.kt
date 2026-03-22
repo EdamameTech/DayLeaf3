@@ -1,6 +1,5 @@
 package com.edamametech.android.dayleaf3.ui
 
-import androidx.compose.ui.platform.LocalAutofill
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +11,7 @@ import com.edamametech.android.dayleaf3.DayLeaf3Application
 import com.edamametech.android.dayleaf3.data.NotesRepository
 import com.edamametech.android.dayleaf3.data.Note
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,8 +34,10 @@ data class NoteUiState(
 
     val previousDate: LocalDate? = null,
     val nextDate: LocalDate? = null,
-    val anyExportable: Boolean = false,
-    val isEdited: Boolean = false
+    val isEdited: Boolean = false,
+
+    val unexported: Int = 0,
+    val exporting: Int = 0
 )
 
 class NoteViewModel(
@@ -76,7 +78,7 @@ class NoteViewModel(
                 null
             }
         }
-        val anyExportable = !notesRepository.getUnexportedDates().isEmpty()
+        val exportable = notesRepository.getUnexportedDatesCount()
         val note = notesRepository.getNote(date)
 
         _uiState.update { currentState ->
@@ -89,7 +91,7 @@ class NoteViewModel(
                 },
                 previousDate = previousDate,
                 nextDate = nextDate,
-                anyExportable = anyExportable,
+                unexported = exportable,
                 isEdited = false
             )
         }
@@ -110,6 +112,7 @@ class NoteViewModel(
     }
 
     suspend fun saveNote() {
+        var unexported = uiState.value.unexported
         if (uiState.value.date != null && uiState.value.isEdited) {
             notesRepository.upsertNote(
                 Note(
@@ -118,11 +121,29 @@ class NoteViewModel(
                     isExported = false
                 )
             )
+            unexported = notesRepository.getUnexportedDatesCount()
         }
         _uiState.update { currentState ->
             currentState.copy(
                 isEdited = false,
-                anyExportable = true
+                unexported = unexported
+            )
+        }
+    }
+
+    suspend fun exportNotes() {
+        val n = uiState.value.unexported
+        for(i in 1..n) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    exporting = i
+                )
+            }
+            delay(500)
+        }
+        _uiState.update { currentState ->
+            currentState.copy(
+                exporting = 0
             )
         }
     }

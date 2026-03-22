@@ -10,4 +10,6 @@ class NotesRepository(private val noteDao: NoteDao) {
     fun getNote(date: LocalDate): Note? = noteDao.getNote(date)
 
     fun getUnexportedDates(): List<LocalDate> = noteDao.getUnexportedDates()
+
+    fun getUnexportedDatesCount(): Int = noteDao.getUnexportedDatesCount()
 }
