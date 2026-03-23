@@ -136,7 +136,7 @@ class NoteViewModel(
     suspend fun exportNotes() {
         saveNote()
         val n = uiState.value.unexported
-        for(i in 1..n) {
+        for (i in 1..n) {
             delay(500)
             _uiState.update { currentState ->
                 currentState.copy(
