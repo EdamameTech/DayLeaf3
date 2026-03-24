@@ -2,7 +2,6 @@ package com.edamametech.android.dayleaf3
 
 import DayLeaf3Screen
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -13,9 +12,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.lifecycleScope
@@ -27,9 +24,11 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private val viewModel: NoteViewModel by viewModels { NoteViewModel.Factory }
 
-    val exportNotes =
+    val exportNotesActivityLauncher =
         registerForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
-            Log.i("exportNotes", uri.toString())
+            lifecycleScope.launch(Dispatchers.IO) {
+                viewModel.exportNotes(uri)
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,10 +53,7 @@ class MainActivity : ComponentActivity() {
                         .safeDrawingPadding()
                         .fillMaxSize(),
                 ) {
-                    DayLeaf3Screen(viewModel)
-                    OutlinedButton(
-                        onClick = { exportNotes.launch("filename.txt") },
-                        content = { Text("Tap here") })
+                    DayLeaf3Screen(viewModel, exportNotesActivityLauncher)
                 }
             }
         }

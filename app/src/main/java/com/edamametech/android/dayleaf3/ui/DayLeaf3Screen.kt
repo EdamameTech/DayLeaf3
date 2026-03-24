@@ -1,3 +1,4 @@
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,7 @@ private fun noteDateString(noteDate: LocalDate): String {
 
 @Composable
 fun DayLeaf3Screen(
-    viewModel: NoteViewModel
+    viewModel: NoteViewModel, exportNotesActivityLauncher: ActivityResultLauncher<String>
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -62,9 +63,7 @@ fun DayLeaf3Screen(
             OutlinedButton(
                 enabled = (uiState.value.unexported > 0 || uiState.value.isEdited) && uiState.value.exporting == 0,
                 onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.exportNotes()
-                    }
+                    exportNotesActivityLauncher.launch("dayleaf3-export.txt")
                 },
                 content = {
                     Text("↓")
@@ -102,14 +101,12 @@ fun DayLeaf3Screen(
             // Today
             OutlinedButton(
                 enabled = uiState.value.exporting == 0, onClick = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        viewModel.saveAndSetDate(LocalDate.now())
-                    }
-                },
-                content = {
-                    Text(">>")
-                },
-                shape = RoundedCornerShape(4.dp)
+                coroutineScope.launch(Dispatchers.IO) {
+                    viewModel.saveAndSetDate(LocalDate.now())
+                }
+            }, content = {
+                Text(">>")
+            }, shape = RoundedCornerShape(4.dp)
             )
         }
         if (uiState.value.exporting > 0) {

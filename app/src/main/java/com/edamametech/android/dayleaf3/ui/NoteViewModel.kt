@@ -1,5 +1,6 @@
 package com.edamametech.android.dayleaf3.ui
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,8 +9,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.edamametech.android.dayleaf3.DayLeaf3Application
-import com.edamametech.android.dayleaf3.data.NotesRepository
 import com.edamametech.android.dayleaf3.data.Note
+import com.edamametech.android.dayleaf3.data.NotesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,8 +42,7 @@ data class NoteUiState(
 )
 
 class NoteViewModel(
-    private val notesRepository: NotesRepository,
-    private val savesStateHandle: SavedStateHandle
+    private val notesRepository: NotesRepository, private val savesStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NoteUiState())
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
@@ -107,8 +107,7 @@ class NoteViewModel(
     fun updateNote(text: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                text = text,
-                isEdited = true
+                text = text, isEdited = true
             )
         }
     }
@@ -118,36 +117,35 @@ class NoteViewModel(
         if (uiState.value.date != null && uiState.value.isEdited) {
             notesRepository.upsertNote(
                 Note(
-                    uiState.value.date!!,
-                    uiState.value.text,
-                    isExported = false
+                    uiState.value.date!!, uiState.value.text, isExported = false
                 )
             )
             unexported = notesRepository.getUnexportedDatesCount()
         }
         _uiState.update { currentState ->
             currentState.copy(
-                isEdited = false,
-                unexported = unexported
+                isEdited = false, unexported = unexported
             )
         }
     }
 
-    suspend fun exportNotes() {
-        saveNote()
-        val n = uiState.value.unexported
-        for (i in 1..n) {
-            delay(500)
+    suspend fun exportNotes(uri: Uri?) {
+        if (uri != null) {
+            saveNote()
+            val n = uiState.value.unexported
+            for (i in 1..n) {
+                delay(500)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        exporting = i
+                    )
+                }
+            }
             _uiState.update { currentState ->
                 currentState.copy(
-                    exporting = i
+                    exporting = 0
                 )
             }
-        }
-        _uiState.update { currentState ->
-            currentState.copy(
-                exporting = 0
-            )
         }
     }
 
@@ -155,15 +153,13 @@ class NoteViewModel(
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
+                modelClass: Class<T>, extras: CreationExtras
             ): T {
                 val application = checkNotNull(extras[APPLICATION_KEY])
                 val savesStateHandle = extras.createSavedStateHandle()
 
                 return NoteViewModel(
-                    (application as DayLeaf3Application).container.notesRepository,
-                    savesStateHandle
+                    (application as DayLeaf3Application).container.notesRepository, savesStateHandle
                 ) as T
             }
         }
