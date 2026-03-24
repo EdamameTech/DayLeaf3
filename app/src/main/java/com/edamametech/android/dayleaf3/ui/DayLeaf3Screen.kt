@@ -52,9 +52,10 @@ fun DayLeaf3Screen(
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
                 overflow = TextOverflow.StartEllipsis,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier
                     .weight(1F)
-                    .padding(8.dp)
+                    .padding(4.dp)
             )
             // Export
             OutlinedButton(
@@ -63,7 +64,11 @@ fun DayLeaf3Screen(
                     exportNotesActivityLauncher.launch(exportFileName(System.currentTimeMillis()))
                 },
                 content = {
-                    Text("↓")
+                    Text(
+                        "↓",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall
+                    )
                 },
                 shape = RoundedCornerShape(4.dp)
             )
@@ -78,7 +83,11 @@ fun DayLeaf3Screen(
                     }
                 },
                 content = {
-                    Text("<")
+                    Text(
+                        "<",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall
+                    )
                 },
                 shape = RoundedCornerShape(4.dp)
             )
@@ -93,7 +102,11 @@ fun DayLeaf3Screen(
                     }
                 },
                 content = {
-                    Text(">")
+                    Text(
+                        ">",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall
+                    )
                 },
                 shape = RoundedCornerShape(4.dp)
             )
@@ -106,7 +119,11 @@ fun DayLeaf3Screen(
                     }
                 },
                 content = {
-                    Text(">>")
+                    Text(
+                        ">>",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall
+                    )
                 },
                 shape = RoundedCornerShape(4.dp)
             )
@@ -124,10 +141,11 @@ fun DayLeaf3Screen(
                     ),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
                     maxLines = 1,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(4.dp)
                 )
             }
         }
@@ -141,9 +159,10 @@ fun DayLeaf3Screen(
                 Text(
                     uiState.value.exportError!!,
                     color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier
                         .weight(1F)
-                        .padding(8.dp)
+                        .padding(4.dp)
                 )
                 OutlinedButton(
                     enabled = uiState.value.exportError != null,
@@ -153,7 +172,8 @@ fun DayLeaf3Screen(
                     content = {
                         Text(
                             "✓",
-                            color = MaterialTheme.colorScheme.error
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.titleSmall,
                         )
                     },
                     shape = RoundedCornerShape(4.dp)
@@ -168,7 +188,7 @@ fun DayLeaf3Screen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(8.dp)
+                .padding(4.dp)
                 .background(color = MaterialTheme.colorScheme.surface)
         )
     }
