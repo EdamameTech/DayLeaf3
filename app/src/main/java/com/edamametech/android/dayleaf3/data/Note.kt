@@ -20,5 +20,5 @@ data class Note(
 
     val text: String,
 
-    val isExported: Boolean
+    var isExported: Boolean
 )

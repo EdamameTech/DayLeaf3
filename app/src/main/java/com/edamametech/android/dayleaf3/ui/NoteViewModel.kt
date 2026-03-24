@@ -1,6 +1,8 @@
 package com.edamametech.android.dayleaf3.ui
 
+import android.content.ContentResolver
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,20 +13,20 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.edamametech.android.dayleaf3.DayLeaf3Application
 import com.edamametech.android.dayleaf3.data.Note
 import com.edamametech.android.dayleaf3.data.NotesRepository
+import com.edamametech.android.dayleaf3.util.noteDateString
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.OutputStream
 import java.time.LocalDate
 
 val mockNotes = listOf<Note>(
     Note(
         LocalDate.of(2026, 3, 14), "It is pie day!", false
-    ),
-    Note(
+    ), Note(
         LocalDate.of(2026, 3, 17), "It is Saint Patrick's Day!", false
     )
 )
@@ -129,22 +131,41 @@ class NoteViewModel(
         }
     }
 
-    suspend fun exportNotes(uri: Uri?) {
-        if (uri != null) {
+    suspend fun exportNotes(uri: Uri?, contentResolver: ContentResolver?) {
+        if (uri != null && contentResolver != null) {
             saveNote()
-            val n = uiState.value.unexported
-            for (i in 1..n) {
-                delay(500)
+            var outputStream: OutputStream? = null
+            try {
+                outputStream = contentResolver.openOutputStream(uri)
+                if (outputStream == null) {
+                    throw (Exception("Could not obtain output stream"))
+                }
+                val dates = notesRepository.getUnexportedDates()
+                val n = dates.size
+                for (i in 0..n - 1) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            exporting = i
+                        )
+                    }
+                    var note = notesRepository.getNote(dates[i])
+                    if (note != null) {
+                        outputStream.write("= ${noteDateString(note.date)}\n${note.text}\n\n".toByteArray())
+                        outputStream.flush()
+                        note.isExported = true
+                        notesRepository.upsertNote(note)
+                    }
+                }
+            } catch (e: Exception) {
+                /* TODO: show what went wrong */
+                Log.e("exportNotes", e.toString())
+            } finally {
+                outputStream?.close()
                 _uiState.update { currentState ->
                     currentState.copy(
-                        exporting = i
+                        exporting = 0
                     )
                 }
-            }
-            _uiState.update { currentState ->
-                currentState.copy(
-                    exporting = 0
-                )
             }
         }
     }

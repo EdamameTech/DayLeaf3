@@ -20,16 +20,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.edamametech.android.dayleaf3.ui.NoteViewModel
+import com.edamametech.android.dayleaf3.util.exportFileName
+import com.edamametech.android.dayleaf3.util.noteDateString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-
-private fun noteDateString(noteDate: LocalDate): String {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd E", Locale.US)
-    return noteDate.format(formatter)
-}
 
 @Composable
 fun DayLeaf3Screen(
@@ -63,7 +58,7 @@ fun DayLeaf3Screen(
             OutlinedButton(
                 enabled = (uiState.value.unexported > 0 || uiState.value.isEdited) && uiState.value.exporting == 0,
                 onClick = {
-                    exportNotesActivityLauncher.launch("dayleaf3-export.txt")
+                    exportNotesActivityLauncher.launch(exportFileName(System.currentTimeMillis()))
                 },
                 content = {
                     Text("↓")

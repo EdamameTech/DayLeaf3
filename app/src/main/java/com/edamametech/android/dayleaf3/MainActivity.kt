@@ -1,6 +1,7 @@
 package com.edamametech.android.dayleaf3
 
 import DayLeaf3Screen
+import android.content.ContentResolver
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -23,16 +24,18 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val viewModel: NoteViewModel by viewModels { NoteViewModel.Factory }
+    private var contentResolver: ContentResolver? = null
 
     val exportNotesActivityLauncher =
         registerForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
             lifecycleScope.launch(Dispatchers.IO) {
-                viewModel.exportNotes(uri)
+                viewModel.exportNotes(uri, contentResolver)
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        contentResolver = getContentResolver()
 
         setContent {
             DayLeaf3Theme {
