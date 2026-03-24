@@ -2,7 +2,6 @@ package com.edamametech.android.dayleaf3.ui
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -40,7 +39,8 @@ data class NoteUiState(
     val isEdited: Boolean = false,
 
     val unexported: Int = 0,
-    val exporting: Int = 0
+    val exporting: Int = 0,
+    val exportError: String? = null
 )
 
 class NoteViewModel(
@@ -114,7 +114,7 @@ class NoteViewModel(
         }
     }
 
-    suspend fun saveNote() {
+    fun saveNote() {
         var unexported = uiState.value.unexported
         if (uiState.value.date != null && uiState.value.isEdited) {
             notesRepository.upsertNote(
@@ -131,7 +131,7 @@ class NoteViewModel(
         }
     }
 
-    suspend fun exportNotes(uri: Uri?, contentResolver: ContentResolver?) {
+    fun exportNotes(uri: Uri?, contentResolver: ContentResolver?) {
         if (uri != null && contentResolver != null) {
             saveNote()
             var outputStream: OutputStream? = null
@@ -157,16 +157,27 @@ class NoteViewModel(
                     }
                 }
             } catch (e: Exception) {
-                /* TODO: show what went wrong */
-                Log.e("exportNotes", e.toString())
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        exportError = e.toString()
+                    )
+                }
             } finally {
                 outputStream?.close()
                 _uiState.update { currentState ->
                     currentState.copy(
-                        exporting = 0
+                        exporting = 0,
                     )
                 }
             }
+        }
+    }
+
+    fun dismissError() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                exportError = null
+            )
         }
     }
 

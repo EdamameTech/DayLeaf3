@@ -41,11 +41,12 @@ fun DayLeaf3Screen(
 
     Column {
         Row(
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
+            // Date
             Text(
                 dateString,
                 color = MaterialTheme.colorScheme.primary,
@@ -54,7 +55,8 @@ fun DayLeaf3Screen(
                 modifier = Modifier
                     .weight(1F)
                     .padding(8.dp)
-            )/* Export */
+            )
+            // Export
             OutlinedButton(
                 enabled = (uiState.value.unexported > 0 || uiState.value.isEdited) && uiState.value.exporting == 0,
                 onClick = {
@@ -64,7 +66,8 @@ fun DayLeaf3Screen(
                     Text("↓")
                 },
                 shape = RoundedCornerShape(4.dp)
-            )/* Previous day */
+            )
+            // Previous day
             OutlinedButton(
                 enabled = uiState.value.previousDate != null && uiState.value.exporting == 0,
                 onClick = {
@@ -78,7 +81,8 @@ fun DayLeaf3Screen(
                     Text("<")
                 },
                 shape = RoundedCornerShape(4.dp)
-            )/* Next day */
+            )
+            // Next day
             OutlinedButton(
                 enabled = uiState.value.nextDate != null && uiState.value.exporting == 0,
                 onClick = {
@@ -95,17 +99,25 @@ fun DayLeaf3Screen(
             )
             // Today
             OutlinedButton(
-                enabled = uiState.value.exporting == 0, onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    viewModel.saveAndSetDate(LocalDate.now())
-                }
-            }, content = {
-                Text(">>")
-            }, shape = RoundedCornerShape(4.dp)
+                enabled = uiState.value.exporting == 0,
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.saveAndSetDate(LocalDate.now())
+                    }
+                },
+                content = {
+                    Text(">>")
+                },
+                shape = RoundedCornerShape(4.dp)
             )
         }
         if (uiState.value.exporting > 0) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            ) {
                 Text(
                     String.format(
                         "↻ %d/%d", uiState.value.exporting, uiState.value.unexported
@@ -115,8 +127,36 @@ fun DayLeaf3Screen(
                     maxLines = 1,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primaryContainer)
-
+                        .padding(8.dp)
+                )
+            }
+        }
+        if (uiState.value.exportError != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.errorContainer)
+            ) {
+                Text(
+                    uiState.value.exportError!!,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .weight(1F)
+                        .padding(8.dp)
+                )
+                OutlinedButton(
+                    enabled = uiState.value.exportError != null,
+                    onClick = {
+                        viewModel.dismissError()
+                    },
+                    content = {
+                        Text(
+                            "✓",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    },
+                    shape = RoundedCornerShape(4.dp)
                 )
             }
         }
