@@ -24,9 +24,9 @@ import java.time.LocalDate
 
 val mockNotes = listOf<Note>(
     Note(
-        LocalDate.of(2026, 3, 14), "It is pie day!", false
+        LocalDate.of(2026, 3, 14), "It is pie day!\n\n\n", false
     ), Note(
-        LocalDate.of(2026, 3, 17), "It is Saint Patrick's Day!", false
+        LocalDate.of(2026, 3, 17), "It is Saint Patrick's Day!\n", false
     )
 )
 
@@ -150,7 +150,7 @@ class NoteViewModel(
                     }
                     var note = notesRepository.getNote(dates[i])
                     if (note != null) {
-                        outputStream.write("= ${noteDateString(note.date)}\n${note.text}\n\n".toByteArray())
+                        outputStream.write("= ${noteDateString(note.date)}\n${note.text.trimEnd{it == '\n'}}\n${if(i < n-1){"\n"}else{""}}".toByteArray())
                         outputStream.flush()
                         note.isExported = true
                         notesRepository.upsertNote(note)
