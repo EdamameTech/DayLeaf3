@@ -79,9 +79,11 @@ fun DayLeaf3Screen(
                             viewModel.saveAndSetDate(uiState.value.previousDate!!)
                         }
                     }
-                }, content = {
+                },
+                content = {
                     Text("<")
-                }, shape = RoundedCornerShape(4.dp)
+                },
+                shape = RoundedCornerShape(4.dp)
             )/* Next day */
             OutlinedButton(
                 enabled = uiState.value.nextDate != null && uiState.value.exporting == 0,
@@ -91,20 +93,23 @@ fun DayLeaf3Screen(
                             viewModel.saveAndSetDate(uiState.value.nextDate!!)
                         }
                     }
-                }, content = {
+                },
+                content = {
                     Text(">")
-                }, shape = RoundedCornerShape(4.dp)
+                },
+                shape = RoundedCornerShape(4.dp)
             )
             // Today
             OutlinedButton(
-                enabled = uiState.value.exporting == 0,
-                onClick = {
+                enabled = uiState.value.exporting == 0, onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
                         viewModel.saveAndSetDate(LocalDate.now())
                     }
-                }, content = {
+                },
+                content = {
                     Text(">>")
-                }, shape = RoundedCornerShape(4.dp)
+                },
+                shape = RoundedCornerShape(4.dp)
             )
         }
         if (uiState.value.exporting > 0) {
