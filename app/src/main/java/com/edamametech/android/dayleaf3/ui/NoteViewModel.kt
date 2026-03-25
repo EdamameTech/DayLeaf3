@@ -70,7 +70,7 @@ class NoteViewModel(
         val today = LocalDate.now()
         val allDates = notesRepository.getAllDates()
         val dateIndex = allDates.binarySearch(date)
-        val previousDate = if (dateIndex < 0) {
+        val previousDate = if (dateIndex < 0 && allDates.size > 0) {
             allDates[allDates.size - 1]
         } else if (dateIndex > 0) {
             allDates[dateIndex - 1]
