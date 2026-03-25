@@ -154,7 +154,7 @@ class NoteViewModel(
                     }
                     var note = notesRepository.getNote(dates[i])
                     if (note != null) {
-                        outputStream.write("= ${noteDateString(note.date)}\n${note.text.trimEnd{it == '\n'}}\n${if(i < n-1){"\n"}else{""}}".toByteArray())
+                        outputStream.write("= ${noteDateString(note.date)}\n${note.text.trimEnd{it == '\n'}}\n\n".toByteArray())
                         outputStream.flush()
                         note.isExported = true
                         notesRepository.upsertNote(note)
