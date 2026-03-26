@@ -9,7 +9,7 @@ In the top bar:
 - Tap ↓ to export notes that have not been exported since edited as a text file,
 - Tap &lt; to view and edit previous note,
 - Tap &gt; to view and edit next note, and
-- Tap &gt;&gt; to view today's note
+- Tap &gt;&gt; to view and edit today's note
 
 ## Privacy policy
 This privacy policy states use of information of the user by a software application, DayLeaf3.
@@ -21,7 +21,6 @@ Copyright 2026 by Green Soybean Technologies &lt;edamametech at gmail.com&gt;, u
 
 ## Development
 ### Releasing the app
-1. Make sure `const val waitDurationUnit` is `60000L` in `app/src/main/java/com/edamametech/android/coffeedriptimer/ui/CoffeeDripTimerScreen.kt`. This can be lowered to, e.g., `5000L` for quicker debugging.
 1. Remove unreferenced resources and debug logs.
 1. Update `android.defaultConfig.versionCode` and `...versionName` in `app/build.gradle.kts`.
 1. Test things on debug build, generate screenshots if necessary.
