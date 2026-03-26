@@ -183,7 +183,7 @@ fun DayLeaf3Screen(
         }
         BasicTextField(
             enabled = uiState.value.date != null && uiState.value.exporting == 0,
-            value = uiState.value.text,
+            value = uiState.value.textFieldValue,
             onValueChange = { viewModel.updateNote(it) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),

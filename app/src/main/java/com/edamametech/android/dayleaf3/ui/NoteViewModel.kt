@@ -2,6 +2,8 @@ package com.edamametech.android.dayleaf3.ui
 
 import android.content.ContentResolver
 import android.net.Uri
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -34,7 +36,7 @@ val mockNotes = listOf<Note>(
 
 data class NoteUiState(
     val date: LocalDate? = null,
-    val text: String = "",
+    val textFieldValue: TextFieldValue = TextFieldValue(""),
 
     val previousDate: LocalDate? = null,
     val nextDate: LocalDate? = null,
@@ -89,14 +91,19 @@ class NoteViewModel(
         val exportable = notesRepository.getUnexportedDatesCount()
         val note = notesRepository.getNote(date)
 
+        val text = if (note != null) {
+            note.text
+        } else {
+            ""
+        }
+        val textFieldValue = uiState.value.textFieldValue.copy(
+            text,
+            TextRange(text.length)
+        )
         _uiState.update { currentState ->
             currentState.copy(
                 date = date,
-                text = if (note != null) {
-                    note.text
-                } else {
-                    ""
-                },
+                textFieldValue = textFieldValue,
                 previousDate = previousDate,
                 nextDate = nextDate,
                 unexported = exportable,
@@ -110,10 +117,11 @@ class NoteViewModel(
         loadNote(date)
     }
 
-    fun updateNote(text: String) {
+    fun updateNote(value: TextFieldValue) {
         _uiState.update { currentState ->
             currentState.copy(
-                text = text, isEdited = true
+                textFieldValue = value,
+                isEdited = true
             )
         }
     }
@@ -123,7 +131,9 @@ class NoteViewModel(
         if (uiState.value.date != null && uiState.value.isEdited) {
             notesRepository.upsertNote(
                 Note(
-                    uiState.value.date!!, uiState.value.text, isExported = false
+                    uiState.value.date!!,
+                    uiState.value.textFieldValue.text,
+                    isExported = false
                 )
             )
             unexported = notesRepository.getUnexportedDatesCount()
