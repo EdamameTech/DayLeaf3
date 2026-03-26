@@ -68,7 +68,7 @@ class NoteViewModel(
     }
      */
 
-    suspend fun loadNote(date: LocalDate) {
+    fun loadNote(date: LocalDate) {
         val today = LocalDate.now()
         val allDates = notesRepository.getAllDates()
         val dateIndex = allDates.binarySearch(date)
@@ -164,7 +164,7 @@ class NoteViewModel(
                     }
                     var note = notesRepository.getNote(dates[i])
                     if (note != null) {
-                        outputStream.write("= ${noteDateString(note.date)}\n${note.text.trimEnd{it == '\n'}}\n\n".toByteArray())
+                        outputStream.write("= ${noteDateString(note.date)}\n${note.text.trimEnd { it == '\n' }}\n\n".toByteArray())
                         outputStream.flush()
                         note.isExported = true
                         notesRepository.upsertNote(note)

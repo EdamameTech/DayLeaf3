@@ -26,6 +26,7 @@ import com.edamametech.android.dayleaf3.util.noteDateString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Locale.ENGLISH
 
 @Composable
 fun DayLeaf3Screen(
@@ -138,6 +139,7 @@ fun DayLeaf3Screen(
             ) {
                 Text(
                     String.format(
+                        ENGLISH,
                         "↻ %d/%d", uiState.value.exporting, uiState.value.unexported
                     ),
                     textAlign = TextAlign.Center,
