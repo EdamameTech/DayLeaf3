@@ -178,9 +178,11 @@ class NoteViewModel(
                 }
             } finally {
                 outputStream?.close()
+                val exportable = notesRepository.getUnexportedDatesCount()
                 _uiState.update { currentState ->
                     currentState.copy(
                         exporting = 0,
+                        unexported = exportable
                     )
                 }
             }
