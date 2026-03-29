@@ -11,6 +11,8 @@ In the top bar:
 - Tap &gt; to view and edit next note, and
 - Tap &gt;&gt; to view and edit today's note
 
+Tap the space below to start editing the note.
+
 ## Privacy policy
 This privacy policy states use of information of the user by a software application, DayLeaf3.
 
