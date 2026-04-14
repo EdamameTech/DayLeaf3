@@ -51,12 +51,15 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 )
-                Surface(
-                    modifier = Modifier
-                        .safeDrawingPadding()
-                        .fillMaxSize(),
-                ) {
-                    DayLeaf3Screen(viewModel, exportNotesActivityLauncher)
+                // Outer Surface is to set background color in device bottom bar
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    Surface(
+                        modifier = Modifier
+                            .safeDrawingPadding()
+                            .fillMaxSize(),
+                    ) {
+                        DayLeaf3Screen(viewModel, exportNotesActivityLauncher)
+                    }
                 }
             }
         }
