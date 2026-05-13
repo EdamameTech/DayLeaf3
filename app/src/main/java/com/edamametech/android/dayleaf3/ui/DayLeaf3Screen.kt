@@ -192,7 +192,7 @@ fun DayLeaf3Screen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(4.dp)
+                .padding(12.dp, 4.dp)
                 .background(color = MaterialTheme.colorScheme.surface)
         )
     }
